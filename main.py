@@ -1,6 +1,8 @@
 import argparse
 import Cryptor as cry
 
+from CryptorMachine import CryptorMachine
+
 parser = argparse.ArgumentParser()
 parser.add_argument('algorithm', choices=['elgamal' , 'ecceg'], help='algoritma kriptografi yang akan dipakai')
 
@@ -44,3 +46,16 @@ if args.load :
     file_name = args.load
     cryptor.load_key(file_name)
 
+if args.encrypt :
+    plain_file = args.encrypt[0]
+    cipher_file = args.encrypt[1]
+
+    machine = CryptorMachine(cryptor)
+    machine.encrypt(plain_file, cipher_file)
+
+if args.decrypt:
+    cipher_file = args.decrypt[0]
+    plain_file = args.decrypt[1]
+
+    machine = CryptorMachine(cryptor)
+    machine.decrypt(cipher_file, plain_file)

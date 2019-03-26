@@ -58,6 +58,8 @@ class EllipticCurve():
         
         return result
     
+    
+
     def gradient(self, point1, point2=None) :
         if point2 != None :
             top = point1[1] - point2[1]
@@ -111,3 +113,11 @@ class EllipticCurve():
         k = 10
         x = point[0]
         return (x - 1) // k
+    
+    def get_basis(self) :
+        result = None
+        for i in range(self.p) :
+            points = self.get_point(i)
+            if points != [] :
+                return points[0]
+        return result

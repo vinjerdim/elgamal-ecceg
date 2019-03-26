@@ -9,6 +9,7 @@ class Cryptor(ABC) :
     def __init__(self) :
         self.public_key = {}
         self.private_key = {}
+        self.name = ''
 
     def save_key(self, file_name):
         with open('{}.pbl'.format(file_name), 'w') as outfile:
@@ -35,6 +36,7 @@ class Cryptor(ABC) :
 class ElGamalCryptor(Cryptor) :
     def __init__(self) :
         rd.seed(None)
+        self.name = 'elgamal'
     
     def generate_key(self, p) :
         g, x = rd.randrange(0, p), rd.randrange(1, p - 1)
@@ -61,23 +63,17 @@ class ElGamalCryptor(Cryptor) :
 class ECCEGCryptor(Cryptor) :
     def __init__(self) :
         rd.seed(None)
+        self.name = 'ecceg'
 
     def generate_key(self, a, b, p) :
         curve = EllipticCurve(a, b, p)
-        temp = []
-        while temp == [] :
-            temp = curve.get_point(rd.randrange(0, p))
-        basis = temp[rd.randrange(len(temp))]
+        basis = curve.get_basis()
 
-        i = rd.randrange(p)
-        while True :
-            if curve.multiply(i, basis) != None :
-                break
-            i = rd.randrange(p)
-        key_point = curve.multiply(i, basis)
+        k = rd.randrange(1, p)
+        key_point = curve.multiply(k, basis)
 
         self.public_key = {'a' : curve.a, 'b' : curve.b, 'p' : curve.p, 'basis' : list(basis), 'y' : list(key_point)}
-        self.private_key = {'x' : i}
+        self.private_key = {'x' : k}
 
     def encrypt(self, m) :
         a, b, p = self.public_key['a'], self.public_key['b'], self.public_key['p']
